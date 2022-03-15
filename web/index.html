@@ -1,0 +1,193 @@
+<!DOCTYPE HTML> <html> <head> <title>字体ttf转woff工具</title> <meta name="description" content="字体ttf转woff工具" /> <meta name="keywords" content="字体压缩工具" /> <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> <style type="text/css">
+html{ height:100%;}
+*{ margin:0;padding:0;}
+body{ font:normal .80em 'trebuchet ms', arial, sans-serif;background:#F0EFE2;color:#777;min-height: 100%;height: 100%;}
+p{ padding:0 0 20px 0;line-height:1.7em;}
+img{ border:0;}
+h1, h2, h3, h4, h5, h6 { font:normal 175% 'century gothic', arial, sans-serif;color:#43423F;margin:0 0 15px 0;padding:15px 0 5px 0;}
+h2{ font:normal 175% 'century gothic', arial, sans-serif;color:#A4AA04;}
+#main{width: 100%;height: 100%;}
+a, a:hover{ outline:none;text-decoration:underline;color:#1293EE;}
+a:hover{ text-decoration:none;}
+.left{ float:left;width:auto;margin-right:10px;}
+.right{ float:right;width:auto;margin-left:10px;}
+.center{ display:block;text-align:center;margin:20px auto;}
+#main, #logo, #menubar, .site_content, #footer{ margin-left:auto;margin-right:auto;}
+#header{ background:#f6f8fa;height:240px;}
+#logo{ width:858px;position:relative;height:168px;background:#f6f8fa;}
+#logo #logo_text{ position:absolute;top:20px;left:0;}
+#logo h1, #logo h2{ font:normal 300% 'century gothic', arial, sans-serif;border-bottom:0;text-transform:none;margin:0;}
+#logo_text h1{ padding:22px 0 0 0;color:#000000;font-weight:bold;letter-spacing:0.1em;text-decoration:none;}
+#menubar{width:877px;height:72px;padding:0;background:#24292f;position: relative;}
+.site_content{ width:858px;overflow:hidden;margin:0 auto 0 auto;padding:10px;background:#FFF;}
+#desc{line-height:70px;padding-left:10px;color:#cccccc;}
+#preDesc{font-size:40px;font-weight: bold;text-align: center;color:#000000;height:100px;padding: 100px 10px;}
+#content{ text-align:left;width:858px;padding:0;overflow:hidden;}
+#content ul{list-style:none;}
+#content li{float:left;padding:10px;width:838px;background: #f6f8fa;color:#000000;font-size:14px;margin:2px 0;}
+#content li:nth-child(even){background: #fcfcfa;}
+.fname{float:left;width:200px;}
+.before{float:left;width:120px;text-align: center;}
+.status{float:left;width:120px;text-align: center;}
+.deal{float:left;width:120px;text-align: center;}
+.after{float:left;width:120px;text-align: center;}
+.down{float:left;width:120px;text-align: center;}
+.down a{text-decoration:none;color:#9a1313;font-size:14px;}
+.down a:hover{text-decoration:underline;}
+.downall{cursor: pointer; color:#24292f;display:block;width:100px;height:30px;background:#f6f8fa;border-radius:6px;position:absolute;left:760px;top:20px;text-decoration:none;text-align:center;line-height:30px;}
+.downall:hover{color:#111111;}
+.clearBtn{cursor: pointer; color:#24292f;display:block;width:100px;height:30px;background:#f6f8fa;border-radius:6px;position:absolute;left:600px;top:20px;text-decoration:none;text-align:center;line-height:30px;}
+.clearBtn:hover{color:#111111;}
+.chsPic{color:#24292f;display:block;width:100px;height:30px;background:#f6f8fa;border-radius:6px;position:absolute;left:160px;top:20px;text-decoration:none;text-align:center;line-height:30px;}
+.opacity{opacity: 0;cursor: pointer;z-index: 4;font-size: 0;margin: 0;padding: 0;}
+#footer{ width:878px;font:normal 100% 'lucida sans unicode', arial, sans-serif;height:33px;padding:24px 0 5px 0;text-align:center;background:#24292f;color:#FFF;text-transform:uppercase;letter-spacing:0.1em;}
+.litop{background: #f6f8fa !important;color:#000000;}
+.detxt{font-size: 14px;color: #9a1313;}%
+</style>
+<script src="//cdn.bootcdn.net/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script type="text/javascript" src="//lib.eqh5.com/sfnt2woff/sfnt2woff.js"></script>
+</head>
+<body>
+<div id="main">
+    <div id="header">
+        <div id="logo">
+            <div id="logo_text"><h1>字体ttf 转woff 工具</h1></div>
+        </div>
+        <div id="menubar">
+            <p id="desc">把字体拖进来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;或者</p>
+            <div class="chsPic">点击选择字体</div>
+            <input type="file" name="chsfile" id="chsfile" value="" accept="font/ttf" title="" multiple class="chsPic opacity"></input>
+            <div class="downall" id="downall">一键打包下载</div>
+            <div class="clearBtn" id="clearBtn">清除列表</div>
+        </div>
+    </div>
+    <div class="site_content" id="preDesc">可以直接把一堆字体拖进来<br/>或者点击按钮选择一堆字体<br/><span class="detxt">注意：打包下载时候同名字体只会打包一个，如果有同名的字体并且需要打包下载，请先清除列表再进行压缩<br/>支持ttf格式的字体。</span></div>
+    <div class="site_content">
+        <div id="content">
+            <ul id="conUl"></ul>
+        </div>
+    </div>
+	<div id="content_footer"></div>
+	<div id="footer">Copyright &copy; Jijun</div>
+</div>
+<script type="text/javascript">
+var imgList = [];
+$('#downall').click(function(){
+    var len = imgList.length;
+    if(len==0) {
+        return;
+    }
+    var zip = new JSZip();
+    for(var i=0;i<len;i++) {
+        zip.file(imgList[i].name, imgList[i].data);
+    }
+    var date = new Date();
+    var mon = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '_';
+    var day = date.getDate() + '_';
+    var hour = date.getHours() + '_';
+    var minu = date.getMinutes();
+    zip.generateAsync({type:"blob"}).then(function(content) {
+        saveAs(content, "sfnt2woff"+mon+day+hour+minu+".zip");
+    });
+});
+$('#clearBtn').click(function(){
+    imgList=[];
+    $('#conUl').html('');
+});
+sfnt2woff.onRuntimeInitialized=function(){
+$('#chsfile').bind("change",function(e){
+    var files = e.target.files;
+    displayChsFile(files);
+    $('#chsfile').val('');
+});
+var tar = document.getElementById("main");
+tar.addEventListener("dragenter", function(event){
+    event.stopPropagation();
+    event.preventDefault();
+}, false);
+tar.addEventListener("dragover", function(event){
+    event.stopPropagation();
+    event.preventDefault();
+}, false);
+tar.addEventListener("drop", handleDrop, false);
+function displayChsFile(files) {
+    var fileList = document.getElementById("fileList");
+    var conUl = $('#conUl');
+    var liNum = $('#conUl li').length+1;
+    if(liNum==1) {
+        $('#preDesc').hide();
+        conUl.append('<li id="conli0" class="litop"><div class="fname">名称</div><div class="before">原始体积</div><div class="status">状态</div><div class="after">压缩后体积</div><div class="deal">压缩率</div><div class="down">操作</div></li>');
+    }
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        if(['font/ttf'].indexOf(file.type)>=0) {
+            conUl.append('<li id="conli'+liNum+'"><div class="fname">'+file.name+'.woff </div><div class="before">'+file.name+'.woff </div><div class="status"></div><div class="after"></div><div class="deal"></div><div class="down"></div></li>');
+            $('#conli'+liNum+' .before').html(getSizeTrans(file.size));
+            uploadFile(file, liNum);
+            liNum++;
+        }
+    }
+}
+function handleDrop(event){
+    var files = event.dataTransfer.files;
+    event.stopPropagation();
+    event.preventDefault();
+    displayChsFile(files);
+}
+function getSizeTrans(fs) {
+    if(fs<1024) {
+        return fs;
+    } else if(fs<1024*1024) {
+        return parseInt(fs*10/1024)/10+'K';
+    } else if(fs<1024*1024*1024) {
+        return parseInt(fs*10/1024/1024)/10+'M';
+    } else {
+        return parseInt(fs*10/1024/1024/1024)/10+'G';
+    }
+}
+function uploadFile(file, ufid) {
+    $('#conli'+ufid+' .status').html('正在处理');
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload = function(e) {
+        var fcont = new Uint8Array(e.target.result);
+        var fsize = fcont.byteLength;
+        var dataptr = sfnt2woff._malloc(fsize);
+        var woffLenPtr = sfnt2woff._malloc(4);
+        sfnt2woff.HEAPU8.set(fcont,dataptr);
+        var woffDataPtr = sfnt2woff._sfnt2woff(dataptr,fsize,woffLenPtr);
+
+        var rdata = new Int32Array(sfnt2woff.HEAPU32.buffer, woffLenPtr, 1);
+		var size = rdata[0];
+																																																						   
+        var blob=null;
+        if(size>0) {
+            var pic = new Uint8Array(size);
+            var rdata = new Uint8Array(sfnt2woff.HEAPU8.buffer, woffDataPtr, size);
+            pic.set(rdata);
+            blob = new Blob([pic.buffer], {type: "font/woff"});
+            pic=null;
+        } else {
+            blob = new Blob([fcont.buffer], {type: "font/ttf"});
+            size=fsize;
+        }
+        fcont=null;
+        var url = (URL || webkitURL).createObjectURL(blob);
+        imgList.push({name:file.name + ".woff",data:blob});
+        var dr = ((fsize-size)*100/fsize|0)+'%';
+        $('#conli'+ufid+' .status').html('完成');
+        $('#conli'+ufid+' .after').html(getSizeTrans(size));
+        $('#conli'+ufid+' .deal').html(dr);
+        $('#conli'+ufid+' .down').html('<a href="'+url+'" download="'+file.name+'.woff">下载</a>');
+        sfnt2woff._free(dataptr);
+        sfnt2woff._free(woffDataPtr);
+		sfnt2woff._free(woffLenPtr);
+    };
+}
+};
+sfnt2woff.run();
+</script>
+</body>
+</html>

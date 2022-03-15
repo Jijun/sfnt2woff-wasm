@@ -1,0 +1,1 @@
+return sfnt2woff; }));
