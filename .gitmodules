@@ -1,0 +1,3 @@
+[submodule "sfnt2woff"]
+	path = sfnt2woff
+	url = https://github.com/wget/sfnt2woff.git

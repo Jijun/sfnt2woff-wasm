@@ -4,7 +4,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "sfnt2woff.h"
 #include "woff.h"
 
 static void reportErr(uint32_t status) {

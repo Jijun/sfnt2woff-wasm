@@ -1,4 +1,4 @@
-<!DOCTYPE HTML> <html> <head> <title>字体ttf转woff工具</title> <meta name="description" content="字体ttf转woff工具" /> <meta name="keywords" content="字体压缩工具" /> <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> <style type="text/css">
+<!DOCTYPE HTML> <html> <head> <title>字体ttf转woff工具sfnt2woff</title> <meta name="description" content="字体ttf转woff工具,sfnt2woff" /> <meta name="keywords" content="字体压缩工具,sfnt2woff" /> <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> <style type="text/css">
 html{ height:100%;}
 *{ margin:0;padding:0;}
 body{ font:normal .80em 'trebuchet ms', arial, sans-serif;background:#F0EFE2;color:#777;min-height: 100%;height: 100%;}
@@ -56,11 +56,11 @@ a:hover{ text-decoration:none;}
             <div id="logo_text"><h1>字体ttf 转woff 工具</h1></div>
         </div>
         <div id="menubar">
-            <p id="desc">把字体拖进来&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;或者</p>
-            <div class="chsPic">点击选择字体</div>
+            <p id="desc">把字体拖进来(Drag)&nbsp;&nbsp;&nbsp;&nbsp;或者or</p>
+            <div class="chsPic">点击选择字体(Choosefonts)</div>
             <input type="file" name="chsfile" id="chsfile" value="" accept="font/ttf" title="" multiple class="chsPic opacity"></input>
-            <div class="downall" id="downall">一键打包下载</div>
-            <div class="clearBtn" id="clearBtn">清除列表</div>
+            <div class="downall" id="downall">下载(DownAll)</div>
+            <div class="clearBtn" id="clearBtn">清除(Clear)</div>
         </div>
     </div>
     <div class="site_content" id="preDesc">可以直接把一堆字体拖进来<br/>或者点击按钮选择一堆字体<br/><span class="detxt">注意：打包下载时候同名字体只会打包一个，如果有同名的字体并且需要打包下载，请先清除列表再进行压缩<br/>支持ttf格式的字体。</span></div>
@@ -96,12 +96,19 @@ $('#clearBtn').click(function(){
     imgList=[];
     $('#conUl').html('');
 });
-sfnt2woff.onRuntimeInitialized=function(){
-$('#chsfile').bind("change",function(e){
+
+var chsfile = document.getElementById('chsfile');
+chsfile.addEventListener("change", function (e){
     var files = e.target.files;
     displayChsFile(files);
     $('#chsfile').val('');
+
 });
+//$('#chsfile').bind("change",function(e){
+//    var files = e.target.files;
+//    displayChsFile(files);
+//    $('#chsfile').val('');
+//});
 var tar = document.getElementById("main");
 tar.addEventListener("dragenter", function(event){
     event.stopPropagation();
@@ -118,11 +125,11 @@ function displayChsFile(files) {
     var liNum = $('#conUl li').length+1;
     if(liNum==1) {
         $('#preDesc').hide();
-        conUl.append('<li id="conli0" class="litop"><div class="fname">名称</div><div class="before">原始体积</div><div class="status">状态</div><div class="after">压缩后体积</div><div class="deal">压缩率</div><div class="down">操作</div></li>');
+        conUl.append('<li id="conli0" class="litop"><div class="fname">名称(Name)</div><div class="before">原始体积(Before)</div><div class="status">状态(State)</div><div class="after">压缩后体积(After)</div><div class="deal">压缩率(Ratio)</div><div class="down">操作(Operation)</div></li>');
     }
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
-        if(['font/ttf'].indexOf(file.type)>=0) {
+        if(['font/ttf'].indexOf(file.type)>=0 || file.type =="") {
             conUl.append('<li id="conli'+liNum+'"><div class="fname">'+file.name+'.woff </div><div class="before">'+file.name+'.woff </div><div class="status"></div><div class="after"></div><div class="deal"></div><div class="down"></div></li>');
             $('#conli'+liNum+' .before').html(getSizeTrans(file.size));
             uploadFile(file, liNum);
@@ -180,12 +187,13 @@ function uploadFile(file, ufid) {
         $('#conli'+ufid+' .status').html('完成');
         $('#conli'+ufid+' .after').html(getSizeTrans(size));
         $('#conli'+ufid+' .deal').html(dr);
-        $('#conli'+ufid+' .down').html('<a href="'+url+'" download="'+file.name+'.woff">下载</a>');
+        $('#conli'+ufid+' .down').html('<a href="'+url+'" download="'+file.name+'.woff">下载(Download)</a>');
         sfnt2woff._free(dataptr);
         sfnt2woff._free(woffDataPtr);
 		sfnt2woff._free(woffLenPtr);
     };
 }
+sfnt2woff.onRuntimeInitialized=function(){
 };
 sfnt2woff.run();
 </script>

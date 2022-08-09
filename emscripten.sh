@@ -1,8 +1,9 @@
 #!/bin/sh
 
-emcc ./c/sfnt2woff.c ./c/woff.c\
+emcc ./wasm/sfnt2woff.c ./sfnt2woff/woff.c\
     -s WASM=1 \
 	-s USE_ZLIB=1 \
+	-I ./sfnt2woff \
     -O3 \
 	--no-entry -fno-rtti -s NO_EXIT_RUNTIME=1 -s ASSERTIONS=0 -s WASM_MEM_MAX=1gb -s ALLOW_TABLE_GROWTH=1 --memory-init-file 0 -s FILESYSTEM=0 -s SUPPORT_LONGJMP=1 -flto --closure 1 -s IGNORE_CLOSURE_COMPILER_ERRORS=0 -s ALLOW_MEMORY_GROWTH=1 \
 	-s EXIT_RUNTIME=1 \
